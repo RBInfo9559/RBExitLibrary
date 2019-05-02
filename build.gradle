@@ -16,21 +16,21 @@ buildscript {
 }
 
 allprojects {
-    version = '1.0'
+    version = '1.7'
     group = 'rb.exit.myexitviewlibrary'
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 27
-        versionCode 6
-        versionName "1.6"
+        targetSdkVersion 28
+        versionCode 7
+        versionName "1.7"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -55,6 +55,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.android.volley:volley:1.1.1'
 
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }

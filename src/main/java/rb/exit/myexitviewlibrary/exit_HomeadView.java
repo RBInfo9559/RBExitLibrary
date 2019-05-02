@@ -22,6 +22,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -33,11 +39,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.TimeZone;
 
-
-public class exit_HomeadView extends RelativeLayout {
-
-    static GetHomeStaticLeftTask get_home_static_left_task;
-    static GetAdStaticLinkTask get_Ad_static_link_task;
+public class exit_HomeadView extends RelativeLayout
+{
+    //static GetHomeStaticLeftTask get_home_static_left_task;
+    //static GetAdStaticLinkTask get_Ad_static_link_task;
 
     static exit_HomeStaticClass home_static_left_data;
     static ArrayList<exit_HomeStaticClass> array_home_static_left = new ArrayList<exit_HomeStaticClass>();
@@ -46,22 +51,22 @@ public class exit_HomeadView extends RelativeLayout {
     static ArrayList<exit_AdStaticLink> array_ad_static_link = new ArrayList<exit_AdStaticLink>();
 
     static String static_app_name1;
-    static String static_app_pakage1;
+    static String static_app_package1;
     static String static_app_icon_url1;
 
     static String static_app_name2;
-    static String static_app_pakage2;
+    static String static_app_package2;
     static String static_app_icon_url2;
 
     static String static_app_name3;
-    static String static_app_pakage3;
+    static String static_app_package3;
     static String static_app_icon_url3;
 
     static String static_app_name4;
-    static String static_app_pakage4;
+    static String static_app_package4;
     static String static_app_icon_url4;
 
-    static String app_pakage_name;
+    static String app_package_name;
 
     static RelativeLayout rel_home_static1;
     static ImageView img_home_static1;
@@ -89,6 +94,7 @@ public class exit_HomeadView extends RelativeLayout {
     static ArrayList<Integer> arr;
     static String Set_Link;
 
+    static RequestQueue requestQueue;
 
     private static Handler data_handler = new Handler()
     {
@@ -127,7 +133,7 @@ public class exit_HomeadView extends RelativeLayout {
                             Log.e("Left Random No ::", String.valueOf(arr.get(0)));
 
                             static_app_name1 = array_home_static_left.get(arr.get(0)).app_name.trim();
-                            static_app_pakage1 = array_home_static_left.get(arr.get(0)).app_pakage_name.trim();
+                            static_app_package1 = array_home_static_left.get(arr.get(0)).app_pakage_name.trim();
                             static_app_icon_url1 = array_home_static_left.get(arr.get(0)).app_icon_url.trim();
 
                             txt_home_static1.setText(static_app_name1);
@@ -155,7 +161,7 @@ public class exit_HomeadView extends RelativeLayout {
                             Log.e("Right Random No ::", String.valueOf(arr.get(1)));
 
                             static_app_name2 = array_home_static_left.get(arr.get(1)).app_name.trim();
-                            static_app_pakage2 = array_home_static_left.get(arr.get(1)).app_pakage_name.trim();
+                            static_app_package2 = array_home_static_left.get(arr.get(1)).app_pakage_name.trim();
                             static_app_icon_url2 = array_home_static_left.get(arr.get(1)).app_icon_url.trim();
 
                             txt_home_static2.setText(static_app_name2);
@@ -183,7 +189,7 @@ public class exit_HomeadView extends RelativeLayout {
                             Log.e("Right Random No ::", String.valueOf(arr.get(2)));
 
                             static_app_name3 = array_home_static_left.get(arr.get(2)).app_name.trim();
-                            static_app_pakage3 = array_home_static_left.get(arr.get(2)).app_pakage_name.trim();
+                            static_app_package3 = array_home_static_left.get(arr.get(2)).app_pakage_name.trim();
                             static_app_icon_url3 = array_home_static_left.get(arr.get(2)).app_icon_url.trim();
 
                             txt_home_static3.setText(static_app_name3);
@@ -211,7 +217,7 @@ public class exit_HomeadView extends RelativeLayout {
                             Log.e("Right Random No ::", String.valueOf(arr.get(3)));
 
                             static_app_name4 = array_home_static_left.get(arr.get(3)).app_name.trim();
-                            static_app_pakage4 = array_home_static_left.get(arr.get(3)).app_pakage_name.trim();
+                            static_app_package4 = array_home_static_left.get(arr.get(3)).app_pakage_name.trim();
                             static_app_icon_url4 = array_home_static_left.get(arr.get(3)).app_icon_url.trim();
 
                             txt_home_static4.setText(static_app_name4);
@@ -239,8 +245,10 @@ public class exit_HomeadView extends RelativeLayout {
                     {
                         if(exit_CommonClass.isOnline(myContext))
                         {
-                            get_Ad_static_link_task = new GetAdStaticLinkTask();
-                            get_Ad_static_link_task.execute();
+                            /*get_Ad_static_link_task = new GetAdStaticLinkTask();
+                            get_Ad_static_link_task.execute();*/
+
+                            GetPrivacyLinkVolleyProcess();
                         }
                     }
                     catch(Exception e)
@@ -317,16 +325,16 @@ public class exit_HomeadView extends RelativeLayout {
         Get_Link();
         if(exit_CommonClass.isOnline(myContext))
         {
-            get_home_static_left_task = new GetHomeStaticLeftTask();
-            get_home_static_left_task.execute();
+            /*get_home_static_left_task = new GetHomeStaticLeftTask();
+            get_home_static_left_task.execute();*/
+
+            GetAppListVolleyProcess();
         }
-
-
     }
 
     //--------------Show Ad
-
-    private static void Get_Link() {
+    private static void Get_Link()
+    {
         // TODO Auto-generated method stub
         String mobileTimeZone =  TimeZone.getDefault().getID();
         if(mobileTimeZone.equals("Asia/Kolkata") || mobileTimeZone.equals("Asia/Calcutta"))
@@ -360,9 +368,8 @@ public class exit_HomeadView extends RelativeLayout {
         }
     }
 
-
-
-    static String stripExtension (String str) {
+    static String stripExtension (String str)
+    {
         // Handle null case specially.
         if (str == null) return null;
         // Get position of last '.'.
@@ -376,7 +383,6 @@ public class exit_HomeadView extends RelativeLayout {
     private static void setupBottomView(View v)
     {
         // TODO Auto-generated method stub
-
         rel_home_static_main = (RelativeLayout) v.findViewById(R.id.home_static_layout);
 
         rel_home_static1 = (RelativeLayout) v.findViewById(R.id.homestatic_app_layout_1);
@@ -411,8 +417,8 @@ public class exit_HomeadView extends RelativeLayout {
             {
                 // TODO Auto-generated method stub
                 String app_name = static_app_name1.trim();
-                String app_pakage = static_app_pakage1.trim();
-                GotoAppStoreDialog(app_name, app_pakage);
+                String app_package = static_app_package1.trim();
+                GotoAppStoreDialog(app_name, app_package);
             }
         });
 
@@ -423,8 +429,8 @@ public class exit_HomeadView extends RelativeLayout {
             {
                 // TODO Auto-generated method stub
                 String app_name = static_app_name2.trim();
-                String app_pakage = static_app_pakage2.trim();
-                GotoAppStoreDialog(app_name, app_pakage);
+                String app_package = static_app_package2.trim();
+                GotoAppStoreDialog(app_name, app_package);
             }
         });
 
@@ -435,8 +441,8 @@ public class exit_HomeadView extends RelativeLayout {
             {
                 // TODO Auto-generated method stub
                 String app_name = static_app_name3.trim();
-                String app_pakage = static_app_pakage3.trim();
-                GotoAppStoreDialog(app_name, app_pakage);
+                String app_package = static_app_package3.trim();
+                GotoAppStoreDialog(app_name, app_package);
             }
         });
 
@@ -447,8 +453,8 @@ public class exit_HomeadView extends RelativeLayout {
             {
                 // TODO Auto-generated method stub
                 String app_name = static_app_name4.trim();
-                String app_pakage = static_app_pakage4.trim();
-                GotoAppStoreDialog(app_name, app_pakage);
+                String app_package = static_app_package4.trim();
+                GotoAppStoreDialog(app_name, app_package);
             }
         });
 
@@ -458,10 +464,6 @@ public class exit_HomeadView extends RelativeLayout {
             public void onClick(View v)
             {
                 // TODO Auto-generated method stub
-
-                //Intent browserIntent = new Intent(myContext,PolicyWebActivity.class);
-                //startActivity(browserIntent);
-                //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 try
                 {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(exit_CommonHelper.static_ad_link));
@@ -470,7 +472,7 @@ public class exit_HomeadView extends RelativeLayout {
                 }
                 catch(Exception e)
                 {
-
+                    e.printStackTrace();
                 }
 
             }
@@ -538,14 +540,15 @@ public class exit_HomeadView extends RelativeLayout {
 
     }
 
-
-    public static class GetHomeStaticLeftTask extends AsyncTask<String, Void, String>
+    /*public static class GetHomeStaticLeftTask extends AsyncTask<String, Void, String>
     {
+        @Override
         protected void onPreExecute()
         {
             app_pakage_name = myContext.getApplicationContext().getPackageName().trim();
         }
 
+        @Override
         public String doInBackground(final String... args)
         {
             try
@@ -616,15 +619,170 @@ public class exit_HomeadView extends RelativeLayout {
         }
 
         // can use UI thread here
+        @Override
         protected void onPostExecute(final String result)
         {
 
         }
+    }*/
+
+    private void GetAppListVolleyProcess()
+    {
+        app_package_name = myContext.getApplicationContext().getPackageName().trim();
+        requestQueue.getCache().remove(Set_Link);
+
+        StringRequest strReq = new StringRequest(Request.Method.GET, Set_Link, new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                array_home_static_left.clear();
+
+                String responseString = null;
+                responseString = response.toString();
+                //Log.e(TAG, responseString);
+
+                JSONObject jsonResultObj = null;
+                // we assume that the response body contains the error
+                // message
+                try
+                {
+                    jsonResultObj = new JSONObject(responseString);
+                }
+                catch (Exception e)
+                {
+                    Log.e("JSON", e.toString());
+                }
+
+                if (jsonResultObj == null)
+                {
+                    data_handler.sendMessage(data_handler.obtainMessage(99));
+                }
+
+                JSONArray jsonResultArr = jsonResultObj.optJSONArray("data");
+                if (jsonResultArr == null)
+                {
+                    data_handler.sendMessage(data_handler.obtainMessage(99));
+                }
+
+
+                for (int i = 0; i < jsonResultArr.length(); i++)
+                {
+
+                    JSONObject jsonObj = jsonResultArr.optJSONObject(i);
+
+                    home_static_left_data = new exit_HomeStaticClass();
+
+                    String app_name = jsonObj.optString("app_name");
+                    String pakage_name = jsonObj.optString("package_name");
+                    String icon_url = jsonObj.optString("app_icon");
+
+                    if(!app_package_name.equals(pakage_name))
+                    {
+                        home_static_left_data.app_name = app_name;
+                        home_static_left_data.app_pakage_name = pakage_name;
+                        home_static_left_data.app_icon_url = icon_url;
+
+                        array_home_static_left.add(home_static_left_data);
+                    }
+                }
+
+                data_handler.sendMessage(data_handler.obtainMessage(0));
+            }
+        }, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                //VolleyLog.d(TAG, "Error: " + error.getMessage());
+                data_handler.sendMessage(data_handler.obtainMessage(99));
+            }
+        })
+        {
+
+        };
+
+        // Adding request to request queue
+        //AppController.getInstance().addToRequestQueue(strReq,tag_string_request);
+        requestQueue.add(strReq);
     }
 
     //---------
+    public static void GetPrivacyLinkVolleyProcess()
+    {
+        requestQueue.getCache().remove(exit_CommonHelper.ad_policy_link);
 
-    public static class GetAdStaticLinkTask extends AsyncTask<String, Void, String>
+        StringRequest strReq = new StringRequest(Request.Method.GET, exit_CommonHelper.ad_policy_link, new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                array_ad_static_link.clear();
+
+                String responseString = null;
+                responseString = response.toString();
+                //Log.e(TAG, responseString);
+
+                JSONObject jsonResultObj = null;
+                // we assume that the response body contains the error
+                // message
+                try
+                {
+                    jsonResultObj = new JSONObject(responseString);
+                }
+                catch (Exception e)
+                {
+                    Log.e("JSON", e.toString());
+                }
+
+                if (jsonResultObj == null)
+                {
+                    data_handler.sendMessage(data_handler.obtainMessage(99));
+                }
+
+                JSONArray jsonResultArr = jsonResultObj.optJSONArray("data");
+                if (jsonResultArr == null)
+                {
+                    data_handler.sendMessage(data_handler.obtainMessage(99));
+                }
+
+                for (int i = 0; i < jsonResultArr.length(); i++)
+                {
+
+                    JSONObject jsonObj = jsonResultArr.optJSONObject(i);
+
+                    home_ad_left_link = new exit_AdStaticLink();
+
+                    String get_ad_name = jsonObj.optString("ad_name");
+                    String get_ad_link = jsonObj.optString("ad_link");
+
+                    home_ad_left_link.ad_name = get_ad_name;
+                    home_ad_left_link.ad_link = get_ad_link;
+
+                    array_ad_static_link.add(home_ad_left_link);
+
+                }
+                data_handler.sendMessage(data_handler.obtainMessage(1));
+            }
+        }, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                //VolleyLog.d(TAG, "Error: " + error.getMessage());
+                data_handler.sendMessage(data_handler.obtainMessage(99));
+            }
+        })
+        {
+
+        };
+
+        // Adding request to request queue
+        //AppController.getInstance().addToRequestQueue(strReq,tag_string_request);
+        requestQueue.add(strReq);
+    }
+
+    /*public static class GetAdStaticLinkTask extends AsyncTask<String, Void, String>
     {
         protected void onPreExecute()
         {
@@ -703,5 +861,5 @@ public class exit_HomeadView extends RelativeLayout {
         {
 
         }
-    }
+    }*/
 }

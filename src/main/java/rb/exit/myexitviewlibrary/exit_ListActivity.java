@@ -21,6 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -41,8 +47,8 @@ public class exit_ListActivity extends Activity
 
 	RelativeLayout exit_static_ad_lbl;
 
-	GetHomeStaticLeftTask get_exit_app_left_task;
-	GetAdStaticLinkTask get_Ad_static_link_task;
+	//GetHomeStaticLeftTask get_exit_app_left_task;
+	//GetAdStaticLinkTask get_Ad_static_link_task;
 
 	exit_ExitAppClass exit_app_left_data;
 	ArrayList<exit_ExitAppClass> array_exit_app_left = new ArrayList<exit_ExitAppClass>();
@@ -51,23 +57,22 @@ public class exit_ListActivity extends Activity
 	ArrayList<exit_AdStaticLink> array_ad_static_link = new ArrayList<exit_AdStaticLink>();
 
 	String static_app_name1;
-	String static_app_pakage1;
+	String static_app_package1;
 	String static_app_icon_url1;
 
 	String static_app_name2;
-	String static_app_pakage2;
+	String static_app_package2;
 	String static_app_icon_url2;
 
 	String static_app_name3;
-	String static_app_pakage3;
+	String static_app_package3;
 	String static_app_icon_url3;
 
 	String static_app_name4;
-	String static_app_pakage4;
+	String static_app_package4;
 	String static_app_icon_url4;
 
-
-	String app_pakage_name;
+	String app_package_name;
 
 	RelativeLayout rel_exit_app_main;
 
@@ -96,6 +101,7 @@ public class exit_ListActivity extends Activity
 	ArrayList<Integer> arr;
 	String Set_Link;
 
+	RequestQueue requestQueue;
 
 	private Handler data_handler = new Handler() 
 	{
@@ -130,7 +136,7 @@ public class exit_ListActivity extends Activity
 						Log.e("Left Random No ::", String.valueOf(arr.get(0)));
 
 						static_app_name1 = array_exit_app_left.get(arr.get(0)).app_name.trim();
-						static_app_pakage1 = array_exit_app_left.get(arr.get(0)).app_pakage_name.trim();
+						static_app_package1 = array_exit_app_left.get(arr.get(0)).app_pakage_name.trim();
 						static_app_icon_url1 = array_exit_app_left.get(arr.get(0)).app_icon_url.trim();
 
 						txt_exit_app_left1.setText(static_app_name1);
@@ -158,7 +164,7 @@ public class exit_ListActivity extends Activity
 						Log.e("Left Random No ::", String.valueOf(arr.get(1)));
 
 						static_app_name2 = array_exit_app_left.get(arr.get(1)).app_name.trim();
-						static_app_pakage2 = array_exit_app_left.get(arr.get(1)).app_pakage_name.trim();
+						static_app_package2 = array_exit_app_left.get(arr.get(1)).app_pakage_name.trim();
 						static_app_icon_url2 = array_exit_app_left.get(arr.get(1)).app_icon_url.trim();
 
 						txt_exit_app_left2.setText(static_app_name2);
@@ -186,7 +192,7 @@ public class exit_ListActivity extends Activity
 						Log.e("Left Random No ::", String.valueOf(arr.get(2)));
 
 						static_app_name3 = array_exit_app_left.get(arr.get(2)).app_name.trim();
-						static_app_pakage3 = array_exit_app_left.get(arr.get(2)).app_pakage_name.trim();
+						static_app_package3 = array_exit_app_left.get(arr.get(2)).app_pakage_name.trim();
 						static_app_icon_url3 = array_exit_app_left.get(arr.get(2)).app_icon_url.trim();
 
 						txt_exit_app_left3.setText(static_app_name3);
@@ -215,7 +221,7 @@ public class exit_ListActivity extends Activity
 						Log.e("Left Random No ::", String.valueOf(arr.get(3)));
 
 						static_app_name4 = array_exit_app_left.get(arr.get(3)).app_name.trim();
-						static_app_pakage4 = array_exit_app_left.get(arr.get(3)).app_pakage_name.trim();
+						static_app_package4 = array_exit_app_left.get(arr.get(3)).app_pakage_name.trim();
 						static_app_icon_url4 = array_exit_app_left.get(arr.get(3)).app_icon_url.trim();
 
 						txt_exit_app_left4.setText(static_app_name4);
@@ -244,16 +250,16 @@ public class exit_ListActivity extends Activity
 				{
 					if(exit_CommonClass.isOnline(exit_ListActivity.this))
 					{
-						get_Ad_static_link_task = new GetAdStaticLinkTask();
-						get_Ad_static_link_task.execute();
+						/*get_Ad_static_link_task = new GetAdStaticLinkTask();
+						get_Ad_static_link_task.execute();*/
+
+						GetPrivacyLinkVolleyProcess();
 					}
 				}
 				catch(Exception e)
 				{
 					Toast.makeText(exit_ListActivity.this, e.toString(), Toast.LENGTH_LONG).show();
 				}
-
-
 			}
 			break;
 			case 1: // Succeeded
@@ -350,8 +356,10 @@ public class exit_ListActivity extends Activity
 
 			if(exit_CommonClass.isOnline(exit_ListActivity.this))
 			{
-				get_exit_app_left_task = new GetHomeStaticLeftTask();
-				get_exit_app_left_task.execute();
+				/*get_exit_app_left_task = new GetHomeStaticLeftTask();
+				get_exit_app_left_task.execute();*/
+
+				GetAppListVolleyProcess();
 			}
 			else
 			{
@@ -387,7 +395,8 @@ public class exit_ListActivity extends Activity
 
 	}
 
-	static String stripExtension (String str) {
+	static String stripExtension (String str)
+	{
 		// Handle null case specially.
 		if (str == null) return null;
 		// Get position of last '.'.
@@ -442,8 +451,8 @@ public class exit_ListActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				String app_name = static_app_name1.trim();
-				String app_pakage = static_app_pakage1.trim();
-				GotoAppStoreDialog(app_name, app_pakage);
+				String app_package = static_app_package1.trim();
+				GotoAppStoreDialog(app_name, app_package);
 			}
 		});
 
@@ -454,8 +463,8 @@ public class exit_ListActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				String app_name = static_app_name2.trim();
-				String app_pakage = static_app_pakage2.trim();
-				GotoAppStoreDialog(app_name, app_pakage);
+				String app_package = static_app_package2.trim();
+				GotoAppStoreDialog(app_name, app_package);
 			}
 		});
 
@@ -466,8 +475,8 @@ public class exit_ListActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				String app_name = static_app_name3.trim();
-				String app_pakage = static_app_pakage3.trim();
-				GotoAppStoreDialog(app_name, app_pakage);
+				String app_package = static_app_package3.trim();
+				GotoAppStoreDialog(app_name, app_package);
 			}
 		});
 
@@ -478,8 +487,8 @@ public class exit_ListActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				String app_name = static_app_name4.trim();
-				String app_pakage = static_app_pakage4.trim();
-				GotoAppStoreDialog(app_name, app_pakage);
+				String app_package = static_app_package4.trim();
+				GotoAppStoreDialog(app_name, app_package);
 			}
 		});
 
@@ -497,13 +506,8 @@ public class exit_ListActivity extends Activity
 				}
 				catch(Exception e)
 				{
-
+					e.printStackTrace();
 				}
-
-				
-				//Intent browserIntent = new Intent(exit_ListActivity.this,PolicyWebActivity.class);
-				//startActivity(browserIntent);
-				//overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
 			}
 		}); 
@@ -511,8 +515,80 @@ public class exit_ListActivity extends Activity
 	}
 
 	//---------
+	private void GetPrivacyLinkVolleyProcess()
+	{
+		requestQueue.getCache().remove(exit_CommonHelper.ad_policy_link);
 
-	public class GetAdStaticLinkTask extends AsyncTask<String, Void, String>
+		StringRequest strReq = new StringRequest(Request.Method.GET, exit_CommonHelper.ad_policy_link, new Response.Listener<String>()
+		{
+			@Override
+			public void onResponse(String response)
+			{
+				array_ad_static_link.clear();
+
+				String responseString = null;
+				responseString = response.toString();
+				//Log.e(TAG, responseString);
+
+				JSONObject jsonResultObj = null;
+				// we assume that the response body contains the error
+				// message
+				try
+				{
+					jsonResultObj = new JSONObject(responseString);
+				}
+				catch (Exception e)
+				{
+					Log.e("JSON", e.toString());
+				}
+
+				if (jsonResultObj == null)
+				{
+					data_handler.sendMessage(data_handler.obtainMessage(99));
+				}
+
+				JSONArray jsonResultArr = jsonResultObj.optJSONArray("data");
+				if (jsonResultArr == null)
+				{
+					data_handler.sendMessage(data_handler.obtainMessage(99));
+				}
+
+				for (int i = 0; i < jsonResultArr.length(); i++)
+				{
+					JSONObject jsonObj = jsonResultArr.optJSONObject(i);
+
+					home_ad_left_link = new exit_AdStaticLink();
+
+					String get_ad_name = jsonObj.optString("ad_name");
+					String get_ad_link = jsonObj.optString("ad_link");
+
+					home_ad_left_link.ad_name = get_ad_name;
+					home_ad_left_link.ad_link = get_ad_link;
+
+					array_ad_static_link.add(home_ad_left_link);
+
+				}
+				data_handler.sendMessage(data_handler.obtainMessage(1));
+			}
+		}, new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+				VolleyLog.d(TAG, "Error: " + error.getMessage());
+				data_handler.sendMessage(data_handler.obtainMessage(99));
+			}
+		})
+		{
+
+		};
+
+		// Adding request to request queue
+		//AppController.getInstance().addToRequestQueue(strReq,tag_string_request);
+		requestQueue.add(strReq);
+	}
+
+	/*public class GetAdStaticLinkTask extends AsyncTask<String, Void, String>
 	{
 		protected void onPreExecute()
 		{
@@ -591,7 +667,7 @@ public class exit_ListActivity extends Activity
 		{
 
 		}
-	}
+	}*/
 
 	@Override
 	public void onBackPressed() 
@@ -655,12 +731,93 @@ public class exit_ListActivity extends Activity
 
 	}
 
+	private void GetAppListVolleyProcess()
+	{
+		app_package_name = getApplicationContext().getPackageName().trim();
+		requestQueue.getCache().remove(Set_Link);
 
-	public class GetHomeStaticLeftTask extends AsyncTask<String, Void, String> 
+		StringRequest strReq = new StringRequest(Request.Method.GET, Set_Link, new Response.Listener<String>()
+		{
+			@Override
+			public void onResponse(String response)
+			{
+				array_exit_app_left.clear();
+
+				String responseString = null;
+				responseString = response.toString();
+				//Log.e(TAG, responseString);
+
+				JSONObject jsonResultObj = null;
+				// we assume that the response body contains the error
+				// message
+				try
+				{
+					jsonResultObj = new JSONObject(responseString);
+				}
+				catch (Exception e)
+				{
+					Log.e("JSON", e.toString());
+				}
+
+				if (jsonResultObj == null)
+				{
+					data_handler.sendMessage(data_handler.obtainMessage(99));
+				}
+
+				JSONArray jsonResultArr = jsonResultObj.optJSONArray("data");
+				if (jsonResultArr == null)
+				{
+					data_handler.sendMessage(data_handler.obtainMessage(99));
+				}
+
+
+				for (int i = 0; i < jsonResultArr.length(); i++)
+				{
+
+					JSONObject jsonObj = jsonResultArr.optJSONObject(i);
+
+					exit_app_left_data = new exit_ExitAppClass();
+
+					String app_name = jsonObj.optString("app_name");
+					String package_name = jsonObj.optString("package_name");
+					String icon_url = jsonObj.optString("app_icon");
+
+					if(!app_package_name.equals(package_name))
+					{
+						exit_app_left_data.app_name = app_name;
+						exit_app_left_data.app_pakage_name = package_name;
+						exit_app_left_data.app_icon_url = icon_url;
+
+						array_exit_app_left.add(exit_app_left_data);
+					}
+
+				}
+
+				data_handler.sendMessage(data_handler.obtainMessage(0));
+			}
+		}, new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+				VolleyLog.d(TAG, "Error: " + error.getMessage());
+				data_handler.sendMessage(data_handler.obtainMessage(99));
+			}
+		})
+		{
+
+		};
+
+		// Adding request to request queue
+		//AppController.getInstance().addToRequestQueue(strReq,tag_string_request);
+		requestQueue.add(strReq);
+	}
+
+	/*public class GetHomeStaticLeftTask extends AsyncTask<String, Void, String>
 	{
 		protected void onPreExecute() 
 		{
-			app_pakage_name = getApplicationContext().getPackageName().trim();
+			app_package_name = getApplicationContext().getPackageName().trim();
 		}
 
 		public String doInBackground(final String... args) 
@@ -712,7 +869,7 @@ public class exit_ListActivity extends Activity
 					String pakage_name = jsonObj.optString("package_name");
 					String icon_url = jsonObj.optString("app_icon");
 
-					if(!app_pakage_name.equals(pakage_name))
+					if(!app_package_name.equals(pakage_name))
 					{
 						exit_app_left_data.app_name = app_name;
 						exit_app_left_data.app_pakage_name = pakage_name;
@@ -739,7 +896,7 @@ public class exit_ListActivity extends Activity
 		{
 
 		}
-	}
+	}*/
 
 
 	Dialog ad_conform_dialog;
