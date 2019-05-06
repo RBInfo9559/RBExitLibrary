@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -301,7 +302,7 @@ public class exit_ListActivity extends Activity
 			setContentView(R.layout.exit_layout);
 
             // Creates the Volley request queue
-            requestQueue = Volley.newRequestQueue(myContext);
+            requestQueue = Volley.newRequestQueue(this);
 
 			// Universal Image Loader start //
 			image_loader.init(ImageLoaderConfiguration.createDefault(exit_ListActivity.this));
