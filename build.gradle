@@ -16,7 +16,7 @@ buildscript {
 }
 
 allprojects {
-    version = '1.7'
+    version = '1.8'
     group = 'rb.exit.myexitviewlibrary'
 }
 
@@ -29,8 +29,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.7"
+        versionCode 8
+        versionName "1.8"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

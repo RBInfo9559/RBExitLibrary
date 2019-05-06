@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -26,7 +25,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -308,6 +306,9 @@ public class exit_HomeadView extends RelativeLayout
     public void init()
     {
         View v = mInflater.inflate(R.layout.exit_applink_layout, this, true);
+
+        // Creates the Volley request queue
+        requestQueue = Volley.newRequestQueue(myContext);
 
         // Universal Image Loader start //
         image_loader.init(ImageLoaderConfiguration.createDefault(myContext));

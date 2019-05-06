@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -301,6 +299,9 @@ public class exit_ListActivity extends Activity
 		try
 		{
 			setContentView(R.layout.exit_layout);
+
+            // Creates the Volley request queue
+            requestQueue = Volley.newRequestQueue(myContext);
 
 			// Universal Image Loader start //
 			image_loader.init(ImageLoaderConfiguration.createDefault(exit_ListActivity.this));
